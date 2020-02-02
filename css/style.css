@@ -1,0 +1,21 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.title {
+  text-align: center;
+}
+
+.maze {
+  border-collapse: collapse;
+  margin: auto;
+}
+
+.maze-cell {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #ddd;
+}
