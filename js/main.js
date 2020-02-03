@@ -23,6 +23,21 @@ class Maze {
   }
 }
 
-const size = 5;
+const drowMaze = maze => {
+  for (let row = 0; row < maze.size; row++) {
+    let tr = $('<tr>');
+    for (let column = 0; column < maze.size; column++) {
+      if (maze.grid[row][column]) {
+        tr.append($('<td class="maze-cell -wall"></td>'));
+      } else {
+        tr.append($('<td class="maze-cell"></td>'));
+      }
+    }
+    $('.maze tbody').append(tr);
+  }
+};
+
+const size = 7;
 const maze = new Maze(size);
 maze.makeGrid();
+drowMaze(maze);
