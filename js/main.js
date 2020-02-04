@@ -1,7 +1,8 @@
 class Maze {
   constructor(size) {
     this.size = size;
-    this.grid = [];
+    this.grid = []; // 壁の場合は1,道の場合は0を格納した二次元配列
+    this.startCellList = []; // 壁を生成するスタート地点となるセルの候補を格納した二次元配列
   }
 
   makeGrid() {
@@ -21,8 +22,20 @@ class Maze {
       this.grid.push(_rowData);
     }
   }
+
+  // row,columnともに偶数となる座標を壁伸ばし開始座標(候補)としてリストアップ
+  countStartCellList() {
+    for (let row = 1; row < this.size - 1; row++) {
+      for (let column = 1; column < this.size - 1; column++) {
+        if (row % 2 === 0 && column % 2 === 0) {
+          this.startCellList.push([row, column]);
+        }
+      }
+    }
+  }
 }
 
+// Mazeインスタンスのデータを元に、DOMを生成
 const drowMaze = maze => {
   for (let row = 0; row < maze.size; row++) {
     let tr = $('<tr>');
@@ -37,6 +50,7 @@ const drowMaze = maze => {
   }
 };
 
+//サイズは必ず5以上の奇数で生成する
 const size = 7;
 const maze = new Maze(size);
 maze.makeGrid();
