@@ -39,35 +39,60 @@ class Maze {
   // startCellListの中身は、実行するごとにランダムに１つずつ減っていく
   createMaze() {
     while (this.startCellList.length) {
-      let random = Math.floor(Math.random() * this.startCellList.length);
-      let startRow = this.startCellList[random][0];
-      let startColumn = this.startCellList[random][1];
-      this.startCellList.splice(random, 1);
+      let rand = Math.floor(Math.random() * this.startCellList.length);
+      let startRow = this.startCellList[rand][0];
+      let startColumn = this.startCellList[rand][1];
+      this.startCellList.splice(rand, 1);
 
       if (this.grid[startRow][startColumn] === 0) {
         this.extendWall(startRow, startColumn);
+      } else {
+        console.log(`Not execute at ${startRow},${startColumn}`);
       }
     }
   }
 
   // 壁伸ばし処理
   // 再帰処理
+  // 今の場所を拡張中ステータスの2に変更
   extendWall(row, column) {
     console.count();
     console.log(row, column);
+    this.grid[row][column] = 2;
 
-    this.test_checkDirection();
     let clearDirection = this.checkDirection(row, column);
     console.log('clearDirection:', clearDirection);
 
-    // もし伸ばすことが可能な方向がなければ、拡張中リストの壁で再帰処理だ！
-    // 壁を伸ばせる方向に2進む
-    // 拡張に成功したら壁を拡張中ステータスの2に変更
-  }
+    // ランダムで選択した壁を伸ばせる方向に2進む
+    if (clearDirection.length) {
+      let rand = Math.floor(Math.random() * clearDirection.length);
 
-  test_checkDirection() {
-    this.grid[2][4] = 2;
-    this.grid[6][2] = 2;
+      switch (clearDirection[rand]) {
+        case 'UP':
+          this.grid[row - 1][column] = 2;
+          this.grid[row - 2][column] = 2;
+          console.log('UPした');
+          return;
+        case 'DOWN':
+          this.grid[row + 1][column] = 2;
+          this.grid[row + 2][column] = 2;
+          console.log('DOWNした');
+          return;
+        case 'LEFT':
+          this.grid[row][column - 1] = 2;
+          this.grid[row][column - 2] = 2;
+          console.log('LEFTした');
+          return;
+        case 'RIGHT':
+          this.grid[row][column + 1] = 2;
+          this.grid[row][column + 2] = 2;
+          console.log('RIGHTした');
+          return;
+      }
+    } else {
+      console.log("Can't Move to any direction!!");
+      // もし伸ばすことが可能な方向がなければ、拡張中リストの壁で再帰処理だ！
+    }
   }
 
   // 上下左右の4方向を探索
@@ -113,8 +138,8 @@ const drowMaze = maze => {
 };
 
 //サイズは必ず5以上の奇数で生成する
-const width = 7;
-const height = 9;
+const width = 15;
+const height = 13;
 const maze = new Maze(width, height);
 maze.makeGrid();
 maze.countStartCellList();
