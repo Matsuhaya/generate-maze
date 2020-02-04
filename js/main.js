@@ -8,19 +8,19 @@ class Maze {
 
   makeGrid() {
     for (let row = 0; row < this.height; row++) {
-      let cell = [];
+      let rowData = [];
       for (let column = 0; column < this.width; column++) {
         if (row === 0 || row === this.height - 1) {
-          cell.push(1);
+          rowData.push(1);
         } else {
           if (column === 0 || column === this.width - 1) {
-            cell.push(1);
+            rowData.push(1);
           } else {
-            cell.push(0);
+            rowData.push(0);
           }
         }
       }
-      this.grid.push(cell);
+      this.grid.push(rowData);
     }
   }
 
@@ -55,10 +55,45 @@ class Maze {
   extendWall(row, column) {
     console.count();
     console.log(row, column);
-    // 壁を伸ばす方向を探索
+
+    this.test_checkDirection();
+    let clearDirection = this.checkDirection(row, column);
+    console.log('clearDirection:', clearDirection);
+
     // もし伸ばすことが可能な方向がなければ、拡張中リストの壁で再帰処理だ！
     // 壁を伸ばせる方向に2進む
-    // 拡張に成功したら壁を拡張中リストにスタック
+    // 拡張に成功したら壁を拡張中ステータスの2に変更
+  }
+
+  test_checkDirection() {
+    this.grid[2][4] = 2;
+    this.grid[6][2] = 2;
+  }
+
+  // 上下左右の4方向を探索
+  // 探索エリアは現在地から2マス先
+  // 探索条件は"拡張中ではないエリアか否か"
+  // 拡張中エリアは2で表現する
+  // 探索可能方向を格納した配列を返す
+  checkDirection(row, column) {
+    let directions = [];
+    // 上方向
+    if (this.grid[row - 2][column] !== 2) {
+      directions.push('UP');
+    }
+    // 下方向
+    if (this.grid[row + 2][column] !== 2) {
+      directions.push('DOWN');
+    }
+    // 左方向
+    if (this.grid[row][column - 2] !== 2) {
+      directions.push('LEFT');
+    }
+    // 右方向
+    if (this.grid[row][column + 2] !== 2) {
+      directions.push('RIGHT');
+    }
+    return directions;
   }
 }
 
