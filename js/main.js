@@ -68,6 +68,8 @@ class Maze {
   // 壁伸ばし処理
   // 再帰処理
   // 今の場所を拡張中ステータスの2に変更
+  // ランダムで選択した壁を伸ばせる方向に2進む
+  // 行き先が通路かどうかを判定
   extendWall(row, column) {
     console.count();
     console.log(row, column);
@@ -76,35 +78,42 @@ class Maze {
     let clearDirection = this.checkDirection(row, column);
     console.log('clearDirection:', clearDirection);
 
-    // ランダムで選択した壁を伸ばせる方向に2進む
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
+      let needsExtending = false;
 
       switch (clearDirection[rand]) {
         case 'UP':
-          this.grid[row - 1][column] = 2;
-          this.grid[row - 2][column] = 2;
+          needsExtending = this.grid[row - 2][column] == 0;
+          this.grid[--row][column] = 2;
+          this.grid[--row][column] = 2;
           console.log('UPした');
-          return;
+          break;
         case 'DOWN':
-          this.grid[row + 1][column] = 2;
-          this.grid[row + 2][column] = 2;
+          needsExtending = this.grid[row + 2][column] == 0;
+          this.grid[++row][column] = 2;
+          this.grid[++row][column] = 2;
           console.log('DOWNした');
-          return;
+          break;
         case 'LEFT':
-          this.grid[row][column - 1] = 2;
-          this.grid[row][column - 2] = 2;
+          needsExtending = this.grid[row][column - 2] == 0;
+          this.grid[row][--column] = 2;
+          this.grid[row][--column] = 2;
           console.log('LEFTした');
-          return;
+          break;
         case 'RIGHT':
-          this.grid[row][column + 1] = 2;
-          this.grid[row][column + 2] = 2;
+          needsExtending = this.grid[row][column + 2] == 0;
+          this.grid[row][++column] = 2;
+          this.grid[row][++column] = 2;
           console.log('RIGHTした');
-          return;
+          break;
       }
-    } else {
-      console.log("Can't Move to any direction!!");
-      // もし伸ばすことが可能な方向がなければ、拡張中リストの壁で再帰処理だ！
+
+      // もしまだ既存の壁と接続していなければ、壁伸ばし続行だ！
+      if (needsExtending) {
+        console.log('拡張MODE継続!!');
+        this.extendWall(row, column);
+      }
     }
   }
 
