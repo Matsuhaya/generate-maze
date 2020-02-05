@@ -45,9 +45,22 @@ class Maze {
       this.startCellList.splice(rand, 1);
 
       if (this.grid[startRow][startColumn] === 0) {
+        this.updateMaze();
         this.extendWall(startRow, startColumn);
       } else {
         console.log(`Not execute at ${startRow},${startColumn}`);
+      }
+    }
+  }
+
+  // extendWallを実行中、拡張中の壁だけが2となるようにする。
+  // 迷路の情報を更新して、0,1のみにする。2は1に変更
+  updateMaze() {
+    for (let row = 0; row < this.height; row++) {
+      for (let column = 0; column < this.width; column++) {
+        if (this.grid[row][column] === 2) {
+          this.grid[row][column] = 1;
+        }
       }
     }
   }
@@ -139,7 +152,7 @@ const drowMaze = maze => {
 
 //サイズは必ず5以上の奇数で生成する
 const width = 15;
-const height = 13;
+const height = 15;
 const maze = new Maze(width, height);
 maze.makeGrid();
 maze.countStartCellList();
