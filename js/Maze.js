@@ -12,19 +12,19 @@ export default class Maze {
   // 大外は壁に設定
   makeGrid() {
     for (let row = 0; row < this.height; row++) {
-      let rowData = [];
+      let rowList = [];
       for (let column = 0; column < this.width; column++) {
         if (row === 0 || row === this.height - 1) {
-          rowData.push(1);
+          rowList.push(1);
         } else {
           if (column === 0 || column === this.width - 1) {
-            rowData.push(1);
+            rowList.push(1);
           } else {
-            rowData.push(0);
+            rowList.push(0);
           }
         }
       }
-      this.grid.push(rowData);
+      this.grid.push(rowList);
     }
   }
 
