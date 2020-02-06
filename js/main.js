@@ -1,4 +1,5 @@
 import Maze from './Maze.js';
+import Explorer from './Explorer.js';
 
 // Mazeインスタンスのデータを元に、DOMを生成
 const drowMaze = maze => {
@@ -30,3 +31,6 @@ maze.setStart();
 maze.setGoal();
 drowMaze(maze);
 console.log('maze:', maze);
+
+const explorer = new Explorer(maze);
+console.log('explorer:', explorer);
