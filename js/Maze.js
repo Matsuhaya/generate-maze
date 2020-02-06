@@ -129,20 +129,21 @@ export default class Maze {
   // 探索可能方向を格納した配列を返す
   checkDirection(row, column) {
     let directions = [];
+    let distance = 2; // 探索距離
     // 上方向
-    if (this.grid[row - 2][column] !== 2) {
+    if (this.grid[row - distance][column] !== 2) {
       directions.push('UP');
     }
     // 下方向
-    if (this.grid[row + 2][column] !== 2) {
+    if (this.grid[row + distance][column] !== 2) {
       directions.push('DOWN');
     }
     // 左方向
-    if (this.grid[row][column - 2] !== 2) {
+    if (this.grid[row][column - distance] !== 2) {
       directions.push('LEFT');
     }
     // 右方向
-    if (this.grid[row][column + 2] !== 2) {
+    if (this.grid[row][column + distance] !== 2) {
       directions.push('RIGHT');
     }
     return directions;
