@@ -8,6 +8,18 @@
   text-align: center;
 }
 
+.description {
+  text-align: center;
+}
+
+.description.-blue {
+  color: #00f;
+}
+
+.description.-red {
+  color: #f00;
+}
+
 .maze {
   border-collapse: collapse;
   margin: auto;
@@ -17,9 +29,17 @@
   width: 10px;
   height: 10px;
   padding: 0;
-  /* border: 1px solid #ddd; */
+  border: 1px solid #ddd;
 }
 
 .maze-cell.-wall {
   background-color: #000;
+}
+
+.maze-cell.-start {
+  background-color: #00f;
+}
+
+.maze-cell.-goal {
+  background-color: #f00;
 }
