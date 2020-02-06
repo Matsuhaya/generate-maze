@@ -36,6 +36,10 @@
   background-color: #000;
 }
 
+.maze-cell.-path {
+  background-color: #ddd;
+}
+
 .maze-cell.-start {
   background-color: #00f;
 }

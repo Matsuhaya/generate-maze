@@ -1,23 +1,23 @@
 export default class Maze {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
+  constructor(WIDTH, HEIGHT) {
+    this.WIDTH = WIDTH;
+    this.HEIGHT = HEIGHT;
     this.grid = []; // 壁の場合は1,道の場合は0を格納した二次元配列
     this.startCellList = []; // 壁を生成するスタート地点となるセルの候補を格納した二次元配列
     this.start = []; // スタート地点の[row, column]
     this.goal = []; // ゴール地点の[row, column]
   }
 
-  // height行,width列の行列を生成
+  // HEIGHT行,WIDTH列の行列を生成
   // 大外は壁に設定
   makeGrid() {
-    for (let row = 0; row < this.height; row++) {
+    for (let row = 0; row < this.HEIGHT; row++) {
       let rowList = [];
-      for (let column = 0; column < this.width; column++) {
-        if (row === 0 || row === this.height - 1) {
+      for (let column = 0; column < this.WIDTH; column++) {
+        if (row === 0 || row === this.HEIGHT - 1) {
           rowList.push(1);
         } else {
-          if (column === 0 || column === this.width - 1) {
+          if (column === 0 || column === this.WIDTH - 1) {
             rowList.push(1);
           } else {
             rowList.push(0);
@@ -30,8 +30,8 @@ export default class Maze {
 
   // row,columnともに偶数となる座標を壁伸ばし開始座標(候補)としてリストアップ
   countStartCellList() {
-    for (let row = 1; row < this.height - 1; row++) {
-      for (let column = 1; column < this.width - 1; column++) {
+    for (let row = 1; row < this.HEIGHT - 1; row++) {
+      for (let column = 1; column < this.WIDTH - 1; column++) {
         if (row % 2 === 0 && column % 2 === 0) {
           this.startCellList.push([row, column]);
         }
@@ -59,8 +59,8 @@ export default class Maze {
   // extendWallを実行中、拡張中の壁だけが2となるようにする。
   // 迷路の情報を更新して、0,1のみにする。2は1に変更
   updateMaze() {
-    for (let row = 0; row < this.height; row++) {
-      for (let column = 0; column < this.width; column++) {
+    for (let row = 0; row < this.HEIGHT; row++) {
+      for (let column = 0; column < this.WIDTH; column++) {
         if (this.grid[row][column] === 2) {
           this.grid[row][column] = 1;
         }
@@ -128,22 +128,22 @@ export default class Maze {
   // 拡張中エリアは2で表現する
   // 探索可能方向を格納した配列を返す
   checkDirection(row, column) {
-    let directions = [];
-    let distance = 2; // 探索距離
+    const directions = [];
+    const DISTANCE = 2; // 探索距離
     // 上方向
-    if (this.grid[row - distance][column] !== 2) {
+    if (this.grid[row - DISTANCE][column] !== 2) {
       directions.push('UP');
     }
     // 下方向
-    if (this.grid[row + distance][column] !== 2) {
+    if (this.grid[row + DISTANCE][column] !== 2) {
       directions.push('DOWN');
     }
     // 左方向
-    if (this.grid[row][column - distance] !== 2) {
+    if (this.grid[row][column - DISTANCE] !== 2) {
       directions.push('LEFT');
     }
     // 右方向
-    if (this.grid[row][column + distance] !== 2) {
+    if (this.grid[row][column + DISTANCE] !== 2) {
       directions.push('RIGHT');
     }
     return directions;
@@ -153,8 +153,8 @@ export default class Maze {
   // 候補が通路であればスタート地点とする
   // 候補が通路でなければ再帰実行
   setStart() {
-    let startRow = Math.floor(Math.random() * this.height);
-    let startColumn = Math.floor(Math.random() * this.width);
+    let startRow = Math.floor(Math.random() * this.HEIGHT);
+    let startColumn = Math.floor(Math.random() * this.WIDTH);
 
     if (
       (startRow % 2 || startColumn % 2) &&
@@ -170,8 +170,8 @@ export default class Maze {
   // スタート地点と同様の手順でゴールを決定
   // スタート地点と被らないようにする
   setGoal() {
-    let goalRow = Math.floor(Math.random() * this.height);
-    let goalColumn = Math.floor(Math.random() * this.width);
+    let goalRow = Math.floor(Math.random() * this.HEIGHT);
+    let goalColumn = Math.floor(Math.random() * this.WIDTH);
 
     if (
       (goalRow % 2 || goalColumn % 2) &&
