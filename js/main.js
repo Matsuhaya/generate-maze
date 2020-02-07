@@ -1,6 +1,13 @@
 import Maze from './Maze.js';
 import Explorer from './Explorer.js';
 
+// 正解ルートの表示切り替え
+$('.answer').click(e => {
+  e.preventDefault();
+  $(e.target).toggleClass('active');
+  $('.maze-cell.-answer-route').toggleClass('show');
+});
+
 // Mazeインスタンスのデータを元に、DOMを生成
 const drowMaze = maze => {
   for (let row = 0; row < maze.HEIGHT; row++) {
@@ -23,8 +30,8 @@ const drowMaze = maze => {
 };
 
 //サイズは必ず5以上の奇数で生成する
-const WIDTH = 99;
-const HEIGHT = 99;
+const WIDTH = 51;
+const HEIGHT = 51;
 const maze = new Maze(WIDTH, HEIGHT);
 maze.makeGrid();
 maze.countStartCellList();

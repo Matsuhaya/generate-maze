@@ -25,7 +25,7 @@ export default class Explorer {
   // セルの探索は上から時計回り方向
   // セルがゴール地点であることを確認したら、その時点で探索終了
   searchGoal(passedCellList) {
-    console.count('Go');
+    // console.count('Go');
     let nextPassedCellList = [];
 
     while (passedCellList.length) {
@@ -34,9 +34,6 @@ export default class Explorer {
       passedCellList.shift();
 
       if (this.grid[row][column] === this.gridType.Goal) {
-        console.log(this.grid[row][column]);
-        console.log('ゴールしました');
-        console.log(this.grid);
         return;
       }
 
@@ -96,7 +93,7 @@ export default class Explorer {
 
   // ゴールからスタートの道を辿り、AnswerRouteに更新
   updateAnswerRoute(row, column) {
-    console.count('Back');
+    // console.count('Back');
     if (this.grid[row][column] !== this.gridType.Start) {
       switch (this.grid[row][column]) {
         case this.gridType.FromUp:
