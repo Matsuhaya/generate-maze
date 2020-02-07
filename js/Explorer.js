@@ -11,15 +11,15 @@ export default class Explorer {
   // 探索キューからセルを取り出す
   // 取り出したセルに隣接するセルの内、未探索のセルをキューに追加
   // セルの探索は上から時計回り方向
-  // セルがゴール地点なら探索終了
-  // map,reduce,forEachだと途中で抜けれないため、forループと配列のshiftで実装すべきか？
+  // セルがゴール地点であることを確認したら、その時点で探索終了
   searchGoal(passedCellList) {
     let nextPassedCellList = [];
     let isGoaled = false;
 
-    passedCellList.map(cell => {
-      let row = cell[0];
-      let column = cell[1];
+    while (passedCellList.length) {
+      let row = passedCellList[0][0];
+      let column = passedCellList[0][1];
+      passedCellList.shift();
 
       console.count();
 
@@ -27,14 +27,13 @@ export default class Explorer {
         this.grid[row][column] = 2;
       } else if (this.grid[row][column] === 'G') {
         console.log(this.grid[row][column]);
-        console.log(typeof this.grid[row][column]);
         console.log('ゴールしました');
         isGoaled = true;
         return;
       }
 
       nextPassedCellList.push(...this.checkDirection(row, column));
-    });
+    }
 
     if (!isGoaled) {
       this.searchGoal(nextPassedCellList);
