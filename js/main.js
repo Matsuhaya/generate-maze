@@ -23,14 +23,14 @@ const drowMaze = maze => {
 };
 
 //サイズは必ず5以上の奇数で生成する
-const WIDTH = 15;
-const HEIGHT = 15;
+const WIDTH = 99;
+const HEIGHT = 99;
 const maze = new Maze(WIDTH, HEIGHT);
 maze.makeGrid();
 maze.countStartCellList();
 maze.createMaze();
-maze.setStart();
-maze.setGoal();
+maze.setUpperLeftStart();
+maze.setUnderRightGoal();
 console.log('maze:', maze);
 
 const explorer = new Explorer(maze);

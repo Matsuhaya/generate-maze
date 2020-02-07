@@ -157,10 +157,24 @@ export default class Maze {
     return directions;
   }
 
+  setUpperLeftStart() {
+    let startRow = 1;
+    let startColumn = 1;
+    this.start = [startRow, startColumn];
+    this.grid[startRow][startColumn] = this.gridType.Start;
+  }
+
+  setUnderRightGoal() {
+    let goalRow = this.HEIGHT - 2;
+    let goalColumn = this.WIDTH - 2;
+    this.goal = [goalRow, goalColumn];
+    this.grid[goalRow][goalColumn] = this.gridType.Goal;
+  }
+
   // ランダムでスタート地点候補を決定
   // 候補がPathであればスタート地点とする
   // 候補がPathでなければ再帰実行
-  setStart() {
+  setRandStart() {
     let startRow = Math.floor(Math.random() * this.HEIGHT);
     let startColumn = Math.floor(Math.random() * this.WIDTH);
 
@@ -177,7 +191,7 @@ export default class Maze {
 
   // スタート地点と同様の手順でゴールを決定
   // スタート地点と被らないようにする
-  setGoal() {
+  setRandGoal() {
     let goalRow = Math.floor(Math.random() * this.HEIGHT);
     let goalColumn = Math.floor(Math.random() * this.WIDTH);
 
