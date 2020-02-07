@@ -20,6 +20,10 @@
   color: #f00;
 }
 
+.description.-green {
+  color: #0f0;
+}
+
 .maze {
   border-collapse: collapse;
   margin: auto;
@@ -37,7 +41,11 @@
 }
 
 .maze-cell.-path {
-  background-color: #ddd;
+  background-color: #fff;
+}
+
+.maze-cell.-answer-route {
+  background-color: #0f0;
 }
 
 .maze-cell.-start {

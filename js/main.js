@@ -8,14 +8,14 @@ const drowMaze = maze => {
     for (let column = 0; column < maze.WIDTH; column++) {
       if (maze.grid[row][column] === 1) {
         tr.append($('<td class="maze-cell -wall"></td>'));
-      } else if (maze.grid[row][column] === 2) {
-        tr.append($('<td class="maze-cell -path"></td>'));
+      } else if (maze.grid[row][column] === 3) {
+        tr.append($('<td class="maze-cell -answer-route"></td>'));
       } else if (maze.grid[row][column] === 'S') {
         tr.append($('<td class="maze-cell -start"></td>'));
       } else if (maze.grid[row][column] === 'G') {
         tr.append($('<td class="maze-cell -goal"></td>'));
       } else {
-        tr.append($('<td class="maze-cell"></td>'));
+        tr.append($('<td class="maze-cell -path"></td>'));
       }
     }
     $('.maze tbody').append(tr);
@@ -36,4 +36,5 @@ console.log('maze:', maze);
 const explorer = new Explorer(maze);
 console.log('explorer:', explorer);
 explorer.searchGoal([explorer.start]); //スタート地点のセルを二次元配列探索キューに追加
+explorer.updateAnswerRoute(explorer.beforeGoal[0], explorer.beforeGoal[1]);
 drowMaze(maze);

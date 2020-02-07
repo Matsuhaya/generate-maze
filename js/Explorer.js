@@ -11,11 +11,13 @@ export default class Explorer {
       Goal: 'G',
       Path: 0,
       Wall: 1,
+      AnswerRoute: 3,
       FromUp: 'U',
       FromRight: 'R',
       FromDown: 'D',
       FromLeft: 'L'
     };
+    this.beforeGoal = []; // ゴール手前の[row, column]
   }
 
   // 探索キューからセルを取り出す
@@ -23,7 +25,7 @@ export default class Explorer {
   // セルの探索は上から時計回り方向
   // セルがゴール地点であることを確認したら、その時点で探索終了
   searchGoal(passedCellList) {
-    console.count();
+    console.count('Go');
     let nextPassedCellList = [];
 
     while (passedCellList.length) {
@@ -47,7 +49,7 @@ export default class Explorer {
   // 上下左右の4方向を探索
   // 探索エリアは現在地から1マス先
   // 探索先が通路の場合、どの方向から来たのかを1マス先に記録
-  // 探索先がゴールの場合、配列に追加してその時点で処理を終える
+  // 探索先がゴールの場合、現在地をbeforeGoalに、探索先をnextPassedCellListにそれぞれ追加してその時点で処理を終える
   // 探索可能方向を格納した配列を返す
   checkDirection(row, column) {
     const nextPassedCellList = [];
@@ -83,11 +85,40 @@ export default class Explorer {
         this.grid[nextRow][nextColumn] = nextGridType;
         nextPassedCellList.push([nextRow, nextColumn]);
       } else if (this.grid[nextRow][nextColumn] === this.gridType.Goal) {
+        this.beforeGoal = [row, column];
         nextPassedCellList.push([nextRow, nextColumn]);
         return nextPassedCellList;
       }
     }
 
     return nextPassedCellList;
+  }
+
+  // ゴールからスタートの道を辿り、AnswerRouteに更新
+  updateAnswerRoute(row, column) {
+    console.count('Back');
+    if (this.grid[row][column] !== this.gridType.Start) {
+      switch (this.grid[row][column]) {
+        case this.gridType.FromUp:
+          this.grid[row][column] = this.gridType.AnswerRoute;
+          --row;
+          break;
+        case this.gridType.FromRight:
+          this.grid[row][column] = this.gridType.AnswerRoute;
+          ++column;
+          break;
+        case this.gridType.FromDown:
+          this.grid[row][column] = this.gridType.AnswerRoute;
+          ++row;
+          break;
+        case this.gridType.FromLeft:
+          this.grid[row][column] = this.gridType.AnswerRoute;
+          --column;
+          break;
+      }
+    } else {
+      return;
+    }
+    this.updateAnswerRoute(row, column);
   }
 }
