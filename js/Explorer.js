@@ -52,41 +52,42 @@ export default class Explorer {
   checkDirection(row, column) {
     const nextPassedCellList = [];
     const DISTANCE = 1; // 探索距離
-    // 上方向
-    if (this.grid[row - DISTANCE][column] === this.gridType.Path) {
-      this.grid[row - DISTANCE][column] = this.gridType.FromDown;
-      nextPassedCellList.push([row - DISTANCE, column]);
-    } else if (this.grid[row - DISTANCE][column] === this.gridType.Goal) {
-      nextPassedCellList.push([row - DISTANCE, column]);
-      return nextPassedCellList;
+
+    for (let i = 0; i < 4; i++) {
+      let nextRow;
+      let nextColumn;
+      let nextGridType;
+      if (i === 0) {
+        // 上方向
+        nextRow = row - DISTANCE;
+        nextColumn = column;
+        nextGridType = this.gridType.FromDown;
+      } else if (i === 1) {
+        // 右方向
+        nextRow = row;
+        nextColumn = column + DISTANCE;
+        nextGridType = this.gridType.FromLeft;
+      } else if (i === 2) {
+        // 下方向
+        nextRow = row + DISTANCE;
+        nextColumn = column;
+        nextGridType = this.gridType.FromUp;
+      } else if (i === 3) {
+        // 左方向
+        nextRow = row;
+        nextColumn = column - DISTANCE;
+        nextGridType = this.gridType.FromRight;
+      }
+
+      if (this.grid[nextRow][nextColumn] === this.gridType.Path) {
+        this.grid[nextRow][nextColumn] = nextGridType;
+        nextPassedCellList.push([nextRow, nextColumn]);
+      } else if (this.grid[nextRow][nextColumn] === this.gridType.Goal) {
+        nextPassedCellList.push([nextRow, nextColumn]);
+        return nextPassedCellList;
+      }
     }
 
-    // 右方向
-    if (this.grid[row][column + DISTANCE] === this.gridType.Path) {
-      this.grid[row][column + DISTANCE] = this.gridType.FromLeft;
-      nextPassedCellList.push([row, column + DISTANCE]);
-    } else if (this.grid[row][column + DISTANCE] === this.gridType.Goal) {
-      nextPassedCellList.push([row, column + DISTANCE]);
-      return nextPassedCellList;
-    }
-
-    // 下方向
-    if (this.grid[row + DISTANCE][column] === this.gridType.Path) {
-      this.grid[row + DISTANCE][column] = this.gridType.FromUp;
-      nextPassedCellList.push([row + DISTANCE, column]);
-    } else if (this.grid[row + DISTANCE][column] === this.gridType.Goal) {
-      nextPassedCellList.push([row + DISTANCE, column]);
-      return nextPassedCellList;
-    }
-
-    // 左方向
-    if (this.grid[row][column - DISTANCE] === this.gridType.Path) {
-      this.grid[row][column - DISTANCE] = this.gridType.FromRight;
-      nextPassedCellList.push([row, column - DISTANCE]);
-    } else if (this.grid[row][column - DISTANCE] === this.gridType.Goal) {
-      nextPassedCellList.push([row, column - DISTANCE]);
-      return nextPassedCellList;
-    }
     return nextPassedCellList;
   }
 }
