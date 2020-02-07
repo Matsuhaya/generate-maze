@@ -2,10 +2,17 @@ export default class Maze {
   constructor(WIDTH, HEIGHT) {
     this.WIDTH = WIDTH;
     this.HEIGHT = HEIGHT;
-    this.grid = []; // 壁の場合は1,道の場合は0を格納した二次元配列
+    this.grid = []; // gridTypeを格納した二次元配列
     this.startCellList = []; // 壁を生成するスタート地点となるセルの候補を格納した二次元配列
     this.start = []; // スタート地点の[row, column]
     this.goal = []; // ゴール地点の[row, column]
+    this.gridType = {
+      Start: 'S',
+      Goal: 'G',
+      Path: 0,
+      Wall: 1,
+      Extending: 2
+    };
   }
 
   // HEIGHT行,WIDTH列の行列を生成
@@ -15,12 +22,12 @@ export default class Maze {
       let rowList = [];
       for (let column = 0; column < this.WIDTH; column++) {
         if (row === 0 || row === this.HEIGHT - 1) {
-          rowList.push(1);
+          rowList.push(this.gridType.Wall);
         } else {
           if (column === 0 || column === this.WIDTH - 1) {
-            rowList.push(1);
+            rowList.push(this.gridType.Wall);
           } else {
-            rowList.push(0);
+            rowList.push(this.gridType.Path);
           }
         }
       }
@@ -48,7 +55,7 @@ export default class Maze {
       let startColumn = this.startCellList[rand][1];
       this.startCellList.splice(rand, 1);
 
-      if (this.grid[startRow][startColumn] === 0) {
+      if (this.grid[startRow][startColumn] === this.gridType.Path) {
         this.extendWall(startRow, startColumn);
       } else {
         // console.log(`Not execute at ${startRow},${startColumn}`);
@@ -56,13 +63,14 @@ export default class Maze {
     }
   }
 
-  // extendWallを実行中、拡張中の壁だけが2となるようにする。
-  // 迷路の情報を更新して、0,1のみにする。2は1に変更
+  // extendWallを実行中、拡張中の壁だけがExtendingとなるようにする。
+  // 迷路の情報を更新して、PathとWallのみにする。
+  // ExtendingはPathに変更
   updateMaze() {
     for (let row = 0; row < this.HEIGHT; row++) {
       for (let column = 0; column < this.WIDTH; column++) {
-        if (this.grid[row][column] === 2) {
-          this.grid[row][column] = 1;
+        if (this.grid[row][column] === this.gridType.Extending) {
+          this.grid[row][column] = this.gridType.Wall;
         }
       }
     }
@@ -70,16 +78,13 @@ export default class Maze {
 
   // 壁伸ばし処理
   // 再帰処理
-  // 今の場所を拡張中ステータスの2に変更
+  // 今いるgridの場所をExtendingに変更
   // ランダムで選択した壁を伸ばせる方向に2進む
-  // 行き先が通路かどうかを判定
+  // 行き先がPathかどうかを判定
   extendWall(row, column) {
-    // console.count();
-    // console.log(row, column);
-    this.grid[row][column] = 2;
-
+    this.grid[row][column] = this.gridType.Extending;
     let clearDirection = this.checkDirection(row, column);
-    // console.log('clearDirection:', clearDirection);
+    const DISTANCE = 2; // 進行距離
 
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
@@ -87,27 +92,31 @@ export default class Maze {
 
       switch (clearDirection[rand]) {
         case 'UP':
-          needsExtending = this.grid[row - 2][column] == 0;
-          this.grid[--row][column] = 2;
-          this.grid[--row][column] = 2;
+          needsExtending =
+            this.grid[row - DISTANCE][column] == this.gridType.Path;
+          this.grid[--row][column] = this.gridType.Extending;
+          this.grid[--row][column] = this.gridType.Extending;
           // console.log('UPした');
           break;
         case 'DOWN':
-          needsExtending = this.grid[row + 2][column] == 0;
-          this.grid[++row][column] = 2;
-          this.grid[++row][column] = 2;
+          needsExtending =
+            this.grid[row + DISTANCE][column] == this.gridType.Path;
+          this.grid[++row][column] = this.gridType.Extending;
+          this.grid[++row][column] = this.gridType.Extending;
           // console.log('DOWNした');
           break;
         case 'LEFT':
-          needsExtending = this.grid[row][column - 2] == 0;
-          this.grid[row][--column] = 2;
-          this.grid[row][--column] = 2;
+          needsExtending =
+            this.grid[row][column - DISTANCE] == this.gridType.Path;
+          this.grid[row][--column] = this.gridType.Extending;
+          this.grid[row][--column] = this.gridType.Extending;
           // console.log('LEFTした');
           break;
         case 'RIGHT':
-          needsExtending = this.grid[row][column + 2] == 0;
-          this.grid[row][++column] = 2;
-          this.grid[row][++column] = 2;
+          needsExtending =
+            this.grid[row][column + DISTANCE] == this.gridType.Path;
+          this.grid[row][++column] = this.gridType.Extending;
+          this.grid[row][++column] = this.gridType.Extending;
           // console.log('RIGHTした');
           break;
       }
@@ -125,43 +134,42 @@ export default class Maze {
   // 上下左右の4方向を探索
   // 探索エリアは現在地から2マス先
   // 探索条件は"拡張中ではないエリアか否か"
-  // 拡張中エリアは2で表現する
   // 探索可能方向を格納した配列を返す
   checkDirection(row, column) {
     const directions = [];
     const DISTANCE = 2; // 探索距離
     // 上方向
-    if (this.grid[row - DISTANCE][column] !== 2) {
+    if (this.grid[row - DISTANCE][column] !== this.gridType.Extending) {
       directions.push('UP');
     }
     // 下方向
-    if (this.grid[row + DISTANCE][column] !== 2) {
+    if (this.grid[row + DISTANCE][column] !== this.gridType.Extending) {
       directions.push('DOWN');
     }
     // 左方向
-    if (this.grid[row][column - DISTANCE] !== 2) {
+    if (this.grid[row][column - DISTANCE] !== this.gridType.Extending) {
       directions.push('LEFT');
     }
     // 右方向
-    if (this.grid[row][column + DISTANCE] !== 2) {
+    if (this.grid[row][column + DISTANCE] !== this.gridType.Extending) {
       directions.push('RIGHT');
     }
     return directions;
   }
 
   // ランダムでスタート地点候補を決定
-  // 候補が通路であればスタート地点とする
-  // 候補が通路でなければ再帰実行
+  // 候補がPathであればスタート地点とする
+  // 候補がPathでなければ再帰実行
   setStart() {
     let startRow = Math.floor(Math.random() * this.HEIGHT);
     let startColumn = Math.floor(Math.random() * this.WIDTH);
 
     if (
       (startRow % 2 || startColumn % 2) &&
-      this.grid[startRow][startColumn] === 0
+      this.grid[startRow][startColumn] === this.gridType.Path
     ) {
       this.start = [startRow, startColumn];
-      this.grid[startRow][startColumn] = 'S';
+      this.grid[startRow][startColumn] = this.gridType.Start;
     } else {
       this.setStart();
     }
@@ -175,10 +183,10 @@ export default class Maze {
 
     if (
       (goalRow % 2 || goalColumn % 2) &&
-      this.grid[goalRow][goalColumn] === 0
+      this.grid[goalRow][goalColumn] === this.gridType.Path
     ) {
       this.goal = [goalRow, goalColumn];
-      this.grid[goalRow][goalColumn] = 'G';
+      this.grid[goalRow][goalColumn] = this.gridType.Goal;
     } else {
       this.setGoal();
     }
