@@ -3,10 +3,10 @@ export default class Explorer {
   constructor(maze) {
     this.WIDTH = maze.WIDTH;
     this.HEIGHT = maze.HEIGHT;
-    this.grid = maze.grid; // gridTypeを格納した二次元配列
+    this.grid = maze.grid; // cellTypeを格納した二次元配列
     this.start = maze.start; // スタート地点の[row, column]
     this.goal = maze.goal; // ゴール地点
-    this.gridType = {
+    this.cellType = {
       Start: 'S',
       Goal: 'G',
       Path: 0,
@@ -33,7 +33,7 @@ export default class Explorer {
       let column = passedCellList[0][1];
       passedCellList.shift();
 
-      if (this.grid[row][column] === this.gridType.Goal) {
+      if (this.grid[row][column] === this.cellType.Goal) {
         return;
       }
 
@@ -55,33 +55,33 @@ export default class Explorer {
     for (let i = 0; i < 4; i++) {
       let nextRow;
       let nextColumn;
-      let nextGridType;
+      let nextcellType;
       if (i === 0) {
         // 上方向
         nextRow = row - DISTANCE;
         nextColumn = column;
-        nextGridType = this.gridType.FromDown;
+        nextcellType = this.cellType.FromDown;
       } else if (i === 1) {
         // 右方向
         nextRow = row;
         nextColumn = column + DISTANCE;
-        nextGridType = this.gridType.FromLeft;
+        nextcellType = this.cellType.FromLeft;
       } else if (i === 2) {
         // 下方向
         nextRow = row + DISTANCE;
         nextColumn = column;
-        nextGridType = this.gridType.FromUp;
+        nextcellType = this.cellType.FromUp;
       } else if (i === 3) {
         // 左方向
         nextRow = row;
         nextColumn = column - DISTANCE;
-        nextGridType = this.gridType.FromRight;
+        nextcellType = this.cellType.FromRight;
       }
 
-      if (this.grid[nextRow][nextColumn] === this.gridType.Path) {
-        this.grid[nextRow][nextColumn] = nextGridType;
+      if (this.grid[nextRow][nextColumn] === this.cellType.Path) {
+        this.grid[nextRow][nextColumn] = nextcellType;
         nextPassedCellList.push([nextRow, nextColumn]);
-      } else if (this.grid[nextRow][nextColumn] === this.gridType.Goal) {
+      } else if (this.grid[nextRow][nextColumn] === this.cellType.Goal) {
         this.beforeGoal = [row, column];
         nextPassedCellList.push([nextRow, nextColumn]);
         return nextPassedCellList;
@@ -94,22 +94,22 @@ export default class Explorer {
   // ゴールからスタートの道を辿り、AnswerRouteに更新
   updateAnswerRoute(row, column) {
     // console.count('Back');
-    if (this.grid[row][column] !== this.gridType.Start) {
+    if (this.grid[row][column] !== this.cellType.Start) {
       switch (this.grid[row][column]) {
-        case this.gridType.FromUp:
-          this.grid[row][column] = this.gridType.AnswerRoute;
+        case this.cellType.FromUp:
+          this.grid[row][column] = this.cellType.AnswerRoute;
           --row;
           break;
-        case this.gridType.FromRight:
-          this.grid[row][column] = this.gridType.AnswerRoute;
+        case this.cellType.FromRight:
+          this.grid[row][column] = this.cellType.AnswerRoute;
           ++column;
           break;
-        case this.gridType.FromDown:
-          this.grid[row][column] = this.gridType.AnswerRoute;
+        case this.cellType.FromDown:
+          this.grid[row][column] = this.cellType.AnswerRoute;
           ++row;
           break;
-        case this.gridType.FromLeft:
-          this.grid[row][column] = this.gridType.AnswerRoute;
+        case this.cellType.FromLeft:
+          this.grid[row][column] = this.cellType.AnswerRoute;
           --column;
           break;
       }
