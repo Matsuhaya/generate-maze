@@ -93,28 +93,28 @@ export default class Maze {
       switch (clearDirection[rand]) {
         case 'UP':
           needsExtending =
-            this.grid[row - DISTANCE][column] == this.cellType.Path;
+            this.grid[row - DISTANCE][column] === this.cellType.Path;
           this.grid[--row][column] = this.cellType.Extending;
           this.grid[--row][column] = this.cellType.Extending;
           // console.log('UPした');
           break;
         case 'DOWN':
           needsExtending =
-            this.grid[row + DISTANCE][column] == this.cellType.Path;
+            this.grid[row + DISTANCE][column] === this.cellType.Path;
           this.grid[++row][column] = this.cellType.Extending;
           this.grid[++row][column] = this.cellType.Extending;
           // console.log('DOWNした');
           break;
         case 'LEFT':
           needsExtending =
-            this.grid[row][column - DISTANCE] == this.cellType.Path;
+            this.grid[row][column - DISTANCE] === this.cellType.Path;
           this.grid[row][--column] = this.cellType.Extending;
           this.grid[row][--column] = this.cellType.Extending;
           // console.log('LEFTした');
           break;
         case 'RIGHT':
           needsExtending =
-            this.grid[row][column + DISTANCE] == this.cellType.Path;
+            this.grid[row][column + DISTANCE] === this.cellType.Path;
           this.grid[row][++column] = this.cellType.Extending;
           this.grid[row][++column] = this.cellType.Extending;
           // console.log('RIGHTした');
