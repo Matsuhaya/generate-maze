@@ -13,6 +13,7 @@ export default class Maze {
       Wall: 1,
       Extending: 2
     };
+    this.extendingCounter = 0;
   }
 
   // HEIGHT行,WIDTH列の行列を生成
@@ -81,10 +82,13 @@ export default class Maze {
   // 今いるgridの場所をExtendingに変更
   // ランダムで選択した壁を伸ばせる方向に2進む
   // 行き先がPathかどうかを判定
+  // Todo:拡張中の壁に囲まれたら永久ループになりそう:
   extendWall(row, column) {
     this.grid[row][column] = this.cellType.Extending;
     let clearDirection = this.checkDirection(row, column);
     const DISTANCE = 2; // 進行距離
+
+    this.drowMyself();
 
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
@@ -127,6 +131,7 @@ export default class Maze {
         this.extendWall(row, column);
       } else {
         this.updateMaze();
+        this.drowMyself();
       }
     }
   }
@@ -205,4 +210,36 @@ export default class Maze {
       this.setGoal();
     }
   }
+
+  // インスタンスのデータを元に、DOMを生成
+  drowMyself = () => {
+    ++this.extendingCounter;
+    let className = `maze step${this.extendingCounter}`;
+    $('.maze-wrapper').append(
+      $(`<table class="${className}"><caption>${className}</caption>`).append(
+        $('<tbody>')
+      )
+    );
+
+    for (let row = 0; row < this.HEIGHT; row++) {
+      let tr = $('<tr>');
+      for (let column = 0; column < this.WIDTH; column++) {
+        if (this.grid[row][column] === 1) {
+          tr.append($('<td class="maze-cell -wall"></td>'));
+        } else if (this.grid[row][column] === 2) {
+          tr.append($('<td class="maze-cell -extending"></td>'));
+        } else if (this.grid[row][column] === 3) {
+          tr.append($('<td class="maze-cell -answer-route"></td>'));
+        } else if (this.grid[row][column] === 'S') {
+          tr.append($('<td class="maze-cell -start"></td>'));
+        } else if (this.grid[row][column] === 'G') {
+          tr.append($('<td class="maze-cell -goal"></td>'));
+        } else {
+          tr.append($('<td class="maze-cell -path"></td>'));
+        }
+      }
+
+      $(`.maze.step${this.extendingCounter} tbody`).append(tr);
+    }
+  };
 }
