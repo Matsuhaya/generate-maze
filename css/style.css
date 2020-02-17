@@ -30,26 +30,38 @@
 }
 
 .description {
+  margin: 16px auto;
   text-align: center;
+  display: block;
 }
 
-.description.-blue {
+.description__list {
+  padding-left: 0;
+  list-style: none;
+  display: inline-block;
+}
+
+.description__list-item {
+  text-align: left;
+}
+
+.color-blue {
   color: #00f;
 }
 
-.description.-red {
+.color-red {
   color: #f00;
 }
 
-.description.-gray {
+.color-gray {
   color: #808080;
 }
 
-.description.-purple {
+.color-purple {
   color: #a757a8;
 }
 
-.description.-green {
+.color-green {
   color: #0f0;
 }
 
