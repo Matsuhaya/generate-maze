@@ -84,14 +84,12 @@ export default class Maze {
   // 再帰処理
   // 今いるgridの場所をExtendingに変更
   // ランダムで選択した壁を伸ばせる方向に2進む
-  // 行き先がPathかどうかを判定
+  // 行き先が壁かどうかを判定
   // Todo:拡張中の壁に囲まれたら永久ループになりそう:
   extendWall(row, column) {
     this.grid[row][column] = this.cellType.Extending;
     let clearDirection = this.checkDirection(row, column);
     const DISTANCE = 2; // 進行距離
-
-    this.drowMyself();
 
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
@@ -100,41 +98,37 @@ export default class Maze {
       switch (clearDirection[rand]) {
         case 'UP':
           needsExtending =
-            this.grid[row - DISTANCE][column] === this.cellType.Path;
+            this.grid[row - DISTANCE][column] !== this.cellType.Wall;
           this.grid[--row][column] = this.cellType.Extending;
           this.grid[--row][column] = this.cellType.Extending;
-          // console.log('UPした');
           break;
         case 'DOWN':
           needsExtending =
-            this.grid[row + DISTANCE][column] === this.cellType.Path;
+            this.grid[row + DISTANCE][column] !== this.cellType.Wall;
           this.grid[++row][column] = this.cellType.Extending;
           this.grid[++row][column] = this.cellType.Extending;
-          // console.log('DOWNした');
           break;
         case 'LEFT':
           needsExtending =
-            this.grid[row][column - DISTANCE] === this.cellType.Path;
+            this.grid[row][column - DISTANCE] !== this.cellType.Wall;
           this.grid[row][--column] = this.cellType.Extending;
           this.grid[row][--column] = this.cellType.Extending;
-          // console.log('LEFTした');
           break;
         case 'RIGHT':
           needsExtending =
-            this.grid[row][column + DISTANCE] === this.cellType.Path;
+            this.grid[row][column + DISTANCE] !== this.cellType.Wall;
           this.grid[row][++column] = this.cellType.Extending;
           this.grid[row][++column] = this.cellType.Extending;
-          // console.log('RIGHTした');
           break;
       }
 
+      this.drowMyself();
+
       // もしまだ既存の壁と接続していなければ、壁伸ばし続行だ！
       if (needsExtending) {
-        // console.log('拡張MODE継続!!');
         this.extendWall(row, column);
       } else {
         this.updateMaze();
-        this.drowMyself();
       }
     }
   }
