@@ -45,6 +45,10 @@
   color: #808080;
 }
 
+.description.-purple {
+  color: #a757a8;
+}
+
 .description.-green {
   color: #0f0;
 }
@@ -67,6 +71,10 @@
 
 .maze-cell.-extending {
   background-color: #808080;
+}
+
+.maze-cell.-extending-start {
+  background-color: #a757a8;
 }
 
 .maze-cell.-path {

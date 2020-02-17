@@ -11,7 +11,8 @@ export default class Maze {
       Goal: 'G',
       Path: 0,
       Wall: 1,
-      Extending: 2
+      Extending: 2,
+      ExtendingStart: 3
     };
     this.extendingCounter = 0;
   }
@@ -42,6 +43,7 @@ export default class Maze {
       for (let column = 1; column < this.WIDTH - 1; column++) {
         if (row % 2 === 0 && column % 2 === 0) {
           this.startCellList.push([row, column]);
+          this.grid[row][column] = this.cellType.ExtendingStart;
         }
       }
     }
@@ -49,6 +51,7 @@ export default class Maze {
 
   // startCellListの中身がなくなるまで、extendWallを繰り返し実行する
   // startCellListの中身は、実行するごとにランダムに１つずつ減っていく
+  // startCellListの中身が壁でないなら、壁の拡張処理を実行する
   createMaze() {
     while (this.startCellList.length) {
       let rand = Math.floor(Math.random() * this.startCellList.length);
@@ -56,7 +59,7 @@ export default class Maze {
       let startColumn = this.startCellList[rand][1];
       this.startCellList.splice(rand, 1);
 
-      if (this.grid[startRow][startColumn] === this.cellType.Path) {
+      if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
         this.extendWall(startRow, startColumn);
       } else {
         // console.log(`Not execute at ${startRow},${startColumn}`);
@@ -224,12 +227,12 @@ export default class Maze {
     for (let row = 0; row < this.HEIGHT; row++) {
       let tr = $('<tr>');
       for (let column = 0; column < this.WIDTH; column++) {
-        if (this.grid[row][column] === 1) {
+        if (this.grid[row][column] === this.cellType.Wall) {
           tr.append($('<td class="maze-cell -wall"></td>'));
-        } else if (this.grid[row][column] === 2) {
+        } else if (this.grid[row][column] === this.cellType.Extending) {
           tr.append($('<td class="maze-cell -extending"></td>'));
-        } else if (this.grid[row][column] === 3) {
-          tr.append($('<td class="maze-cell -answer-route"></td>'));
+        } else if (this.grid[row][column] === this.cellType.ExtendingStart) {
+          tr.append($('<td class="maze-cell -extending-start"></td>'));
         } else if (this.grid[row][column] === 'S') {
           tr.append($('<td class="maze-cell -start"></td>'));
         } else if (this.grid[row][column] === 'G') {
