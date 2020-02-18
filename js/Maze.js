@@ -209,7 +209,7 @@ export default class Maze {
   }
 
   // インスタンスのデータを元に、DOMを生成
-  drowMyself = () => {
+  drowMyself() {
     ++this.extendingCounter;
     let className = `maze step${this.extendingCounter}`;
     $('.maze-wrapper').append(
@@ -238,5 +238,5 @@ export default class Maze {
 
       $(`.maze.step${this.extendingCounter} tbody`).append(tr);
     }
-  };
+  }
 }
