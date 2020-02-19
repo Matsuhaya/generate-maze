@@ -18,22 +18,27 @@ export default class Maze {
   }
 
   // HEIGHT行,WIDTH列の行列を生成
-  // 大外は壁に設定
   makeGrid() {
     for (let row = 0; row < this.HEIGHT; row++) {
       let rowList = [];
       for (let column = 0; column < this.WIDTH; column++) {
-        if (row === 0 || row === this.HEIGHT - 1) {
-          rowList.push(this.cellType.Wall);
-        } else {
-          if (column === 0 || column === this.WIDTH - 1) {
-            rowList.push(this.cellType.Wall);
-          } else {
-            rowList.push(this.cellType.Path);
-          }
-        }
+        rowList.push(this.initializeCellType(row, column));
       }
       this.grid.push(rowList);
+    }
+  }
+
+  // rowとcolumの値に応じたcellTypeの初期化を実施
+  // 大外は壁に設定
+  initializeCellType(row, column) {
+    if (row === 0 || row === this.HEIGHT - 1) {
+      return this.cellType.Wall;
+    } else {
+      if (column === 0 || column === this.WIDTH - 1) {
+        return this.cellType.Wall;
+      } else {
+        return this.cellType.Path;
+      }
     }
   }
 
@@ -61,30 +66,30 @@ export default class Maze {
       let isExtendingSuccess = false;
 
       // -----壁拡張が失敗するパターンでextendWallを実行した場合のテスト-----
-      isExtendingSuccess = this.extendWall_ng_falseClearDirectionAndFalseIsConnectedWall();
-      if (isExtendingSuccess) {
-        this.startCellList.splice(rand, 1);
-      } else {
-        console.log('拡張中の壁を破棄し、再度壁を拡張します');
-        this.updateExtending(this.cellType.Path);
-        return;
-      }
-      // -----------------------------------------------------------
-
-      // if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
-      //   this.grid[startRow][startColumn] = this.cellType.Extending;
-      //   isExtendingSuccess = this.extendWall(startRow, startColumn);
-      // } else {
-      //   console.log(`Not execute extendWall at ${startRow},${startColumn}`);
-      //   this.startCellList.splice(rand, 1);
-      // }
-
+      // isExtendingSuccess = this.extendWall_ng_falseClearDirectionAndFalseIsConnectedWall();
       // if (isExtendingSuccess) {
       //   this.startCellList.splice(rand, 1);
       // } else {
       //   console.log('拡張中の壁を破棄し、再度壁を拡張します');
       //   this.updateExtending(this.cellType.Path);
+      //   return;
       // }
+      // -----------------------------------------------------------
+
+      if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
+        this.grid[startRow][startColumn] = this.cellType.Extending;
+        isExtendingSuccess = this.extendWall(startRow, startColumn);
+      } else {
+        console.log(`Not execute extendWall at ${startRow},${startColumn}`);
+        this.startCellList.splice(rand, 1);
+      }
+
+      if (isExtendingSuccess) {
+        this.startCellList.splice(rand, 1);
+      } else {
+        console.log('拡張中の壁を破棄し、再度壁を拡張します');
+        this.updateExtending(this.cellType.Path);
+      }
     }
   }
 
