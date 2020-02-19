@@ -128,7 +128,7 @@ export default class Maze {
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
       // row, column, isConnectedWallを更新
-      ({ row, column, isConnectedWall } = this.updateExtendingToDirection(
+      ({ row, column, isConnectedWall } = this.updateExtendingOnDirection(
         row,
         column,
         clearDirection[rand],
@@ -180,7 +180,7 @@ export default class Maze {
   // 1.拡張先が既存の壁の場合、フラグを立てる
   // 2.引数の方向に壁を拡張する
   // 3.実行後は、フラグの結果を返す
-  updateExtendingToDirection(row, column, direction, DISTANCE) {
+  updateExtendingOnDirection(row, column, direction, DISTANCE) {
     let isConnectedWall;
     switch (direction) {
       case 'UP':
@@ -322,7 +322,7 @@ export default class Maze {
     this.grid[row][column] = this.cellType.Extending;
 
     for (let i = 0; i < directions.length; i++) {
-      ({ row, column, isConnectedWall } = this.updateExtendingToDirection(
+      ({ row, column, isConnectedWall } = this.updateExtendingOnDirection(
         row,
         column,
         directions[i],
