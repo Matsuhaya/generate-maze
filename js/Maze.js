@@ -52,30 +52,59 @@ export default class Maze {
   // startCellListの中身がなくなるまで、extendWallを繰り返し実行する
   // startCellListの中身は、実行するごとにランダムに１つずつ減っていく
   // startCellListの中身が壁でないなら、壁の拡張処理を実行する
+  // 壁を伸ばせる方向がなければ、拡張中の壁に関する変更を破棄した後、再度壁を拡張する
   createMaze() {
     while (this.startCellList.length) {
       let rand = Math.floor(Math.random() * this.startCellList.length);
       let startRow = this.startCellList[rand][0];
       let startColumn = this.startCellList[rand][1];
-      this.startCellList.splice(rand, 1);
+      let isExtendingSuccess = false;
 
-      if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
-        this.grid[startRow][startColumn] = this.cellType.Extending;
-        this.extendWall(startRow, startColumn);
+      // -----壁拡張が失敗するパターンでextendWallを実行した場合のテスト-----
+      isExtendingSuccess = this.extendWall_ng_falseClearDirectionAndFalseIsConnectedWall();
+      if (isExtendingSuccess) {
+        this.startCellList.splice(rand, 1);
       } else {
-        console.log(`Not execute extendWall at ${startRow},${startColumn}`);
+        console.log('拡張中の壁を破棄し、再度壁を拡張します');
+        this.updateExtending(this.cellType.Path);
+        return;
       }
+      // -----------------------------------------------------------
+
+      // if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
+      //   this.grid[startRow][startColumn] = this.cellType.Extending;
+      //   isExtendingSuccess = this.extendWall(startRow, startColumn);
+      // } else {
+      //   console.log(`Not execute extendWall at ${startRow},${startColumn}`);
+      //   this.startCellList.splice(rand, 1);
+      // }
+
+      // if (isExtendingSuccess) {
+      //   this.startCellList.splice(rand, 1);
+      // } else {
+      //   console.log('拡張中の壁を破棄し、再度壁を拡張します');
+      //   this.updateExtending(this.cellType.Path);
+      // }
     }
   }
 
   // extendWallを実行中、拡張中の壁だけがExtendingとなるようにする。
   // 迷路の情報を更新して、PathとWallのみにする。
-  // ExtendingはPathに変更
-  updateMaze() {
+  // 壁に更新する場合、ExtendingはWallに変更
+  // 更新をリセットする場合、ExtendingはPathとExtendingStartに変更
+  updateExtending(nextCellType) {
     for (let row = 0; row < this.HEIGHT; row++) {
       for (let column = 0; column < this.WIDTH; column++) {
         if (this.grid[row][column] === this.cellType.Extending) {
-          this.grid[row][column] = this.cellType.Wall;
+          this.grid[row][column] = nextCellType;
+
+          if (
+            nextCellType === this.cellType.Path &&
+            row % 2 === 0 &&
+            column % 2 === 0
+          ) {
+            this.grid[row][column] = this.cellType.ExtendingStart;
+          }
         }
       }
     }
@@ -86,7 +115,6 @@ export default class Maze {
   // 今いるgridの場所をExtendingに変更
   // ランダムで選択した壁を伸ばせる方向に2進む
   // 行き先が壁かどうかを判定
-  // Todo:拡張中の壁に囲まれたら永久ループになりそう
   extendWall(row, column) {
     const DISTANCE = 2; // 進行距離
     let clearDirection = this.checkDirection(row, column, DISTANCE);
@@ -107,13 +135,14 @@ export default class Maze {
       if (!isConnectedWall) {
         this.extendWall(row, column);
       } else {
-        this.updateMaze();
+        this.updateExtending(this.cellType.Wall);
         // 更新後に描画する方が、更新プロセスがわかりやすい
         this.drowMyself();
+        return true;
       }
     } else {
       console.log('壁に接続していないのに、進める方向がありません');
-      // this.updateMaze();
+      return false;
     }
   }
 
@@ -147,8 +176,6 @@ export default class Maze {
   // 2.引数の方向に壁を拡張する
   // 3.実行後は、フラグの結果を返す
   updateExtendingToDirection(row, column, direction, DISTANCE) {
-    console.count();
-    console.log(row, column);
     let isConnectedWall;
     switch (direction) {
       case 'UP':
@@ -265,6 +292,48 @@ export default class Maze {
       }
 
       $(`.maze.step${this.extendingCounter} tbody`).append(tr);
+    }
+  }
+
+  // テスト
+  // this.grid(4,4)が拡張中の壁に囲まれる状態にする
+  // 壁拡張中、拡張中の壁に囲まれたらテスト成功をコンソールに出力
+  extendWall_ng_falseClearDirectionAndFalseIsConnectedWall() {
+    // 前提条件を満たす状態変更
+    const DISTANCE = 2; // 進行距離
+    let isConnectedWall = false;
+    let row = 2;
+    let column = 2;
+    let directions = [
+      'DOWN',
+      'DOWN',
+      'RIGHT',
+      'RIGHT',
+      'UP',
+      'UP',
+      'LEFT',
+      'DOWN'
+    ];
+    this.grid[row][column] = this.cellType.Extending;
+
+    for (let i = 0; i < directions.length; i++) {
+      ({ row, column, isConnectedWall } = this.updateExtendingToDirection(
+        row,
+        column,
+        directions[i],
+        DISTANCE
+      ));
+      this.drowMyself();
+    }
+
+    // 実行
+    let result = this.extendWall(4, 4);
+
+    // 結果表示
+    if (!result) {
+      console.log('テスト成功:', this.grid);
+    } else {
+      console.log('テスト失敗:', this.grid);
     }
   }
 }
