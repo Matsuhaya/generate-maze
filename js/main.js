@@ -13,11 +13,11 @@ const WIDTH = 9;
 const HEIGHT = 9;
 const maze = new Maze(WIDTH, HEIGHT);
 maze.makeGrid();
-maze.countStartCellList();
-maze.drowMyself();
-maze.createMaze();
-maze.setUpperLeftStart();
-maze.setUnderRightGoal();
+// maze.countStartCellList();
+// maze.drowMyself();
+// maze.createMaze();
+// maze.setUpperLeftStart();
+// maze.setUnderRightGoal();
 maze.drowMyself();
 console.log('maze:', maze);
 

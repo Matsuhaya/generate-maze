@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
+/* 
 .contoroller {
   text-align: center;
 }
@@ -23,10 +24,6 @@
 
 .contoroller .answer.active {
   background: rgba(0, 255, 0, 1);
-}
-
-.title {
-  text-align: center;
 }
 
 .description {
@@ -63,7 +60,7 @@
 
 .color-green {
   color: #0f0;
-}
+} */
 
 .maze {
   border-collapse: collapse;
@@ -107,6 +104,6 @@
 
 .maze-wrapper {
   margin: 20px auto 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
 }
