@@ -12,10 +12,10 @@ $('.answer').click(e => {
 const WIDTH = 9;
 const HEIGHT = 9;
 const maze = new Maze(WIDTH, HEIGHT);
-maze.makeGrid();
+maze.generateGrid();
 // maze.countStartCellList();
 // maze.drowMyself();
-// maze.createMaze();
+// maze.generateMaze();
 // maze.setUpperLeftStart();
 // maze.setUnderRightGoal();
 maze.drowMyself();

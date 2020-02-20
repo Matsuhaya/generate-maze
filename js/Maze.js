@@ -18,7 +18,7 @@ export default class Maze {
   }
 
   // HEIGHT行,WIDTH列の行列を生成
-  makeGrid() {
+  generateGrid() {
     for (let row = 0; row < this.HEIGHT; row++) {
       let rowList = [];
       for (let column = 0; column < this.WIDTH; column++) {
@@ -58,7 +58,7 @@ export default class Maze {
   // startCellListの中身は、実行するごとにランダムに１つずつ減っていく
   // startCellListの中身が壁でないなら、壁の拡張処理を実行する
   // 壁を伸ばせる方向がなければ、拡張中の壁に関する変更を破棄した後、再度壁を拡張する
-  createMaze() {
+  generateMaze() {
     while (this.startCellList.length) {
       // ランダムでリストからセルを取り出す
       let rand = Math.floor(Math.random() * this.startCellList.length);
