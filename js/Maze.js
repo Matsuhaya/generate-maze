@@ -12,7 +12,7 @@ export class Maze {
       Path: 0,
       Wall: 1,
       Extending: 2,
-      ExtendingStart: 3
+      ExtendingStart: 3 // startCellList内に含まれており、かつPathである状態
     };
     this.extendingCounter = 0; // 迷路の壁を拡張するたびにカウンターが増加する
   }
@@ -42,8 +42,8 @@ export class Maze {
     }
   }
 
-  // row,columnともに偶数となる座標を壁伸ばし開始座標(候補)としてリストアップ
-  countStartCellList() {
+  // row,columnともに偶数となるセルを壁伸ばし開始地点(候補)としてリストに格納
+  addStartCellList() {
     for (let row = 1; row < this.HEIGHT - 1; row++) {
       for (let column = 1; column < this.WIDTH - 1; column++) {
         if (row % 2 === 0 && column % 2 === 0) {
@@ -54,11 +54,18 @@ export class Maze {
     }
   }
 
+  removeStartCellList(index) {
+    this.startCellList.splice(index, 1);
+  }
+
+  // startCellListに壁伸ばし開始座標をリストアップ
   // startCellListの中身がなくなるまで、extendWallを繰り返し実行する
   // startCellListの中身は、実行するごとにランダムに１つずつ減っていく
   // startCellListの中身が壁でないなら、壁の拡張処理を実行する
   // 壁を伸ばせる方向がなければ、拡張中の壁に関する変更を破棄した後、再度壁を拡張する
   generateMaze() {
+    this.addStartCellList();
+
     while (this.startCellList.length) {
       // ランダムでリストからセルを取り出す
       let rand = Math.floor(Math.random() * this.startCellList.length);
@@ -66,24 +73,24 @@ export class Maze {
       let startColumn = this.startCellList[rand][1];
       let isExtendingSuccess = false;
 
-      // 壁拡張が失敗するパターンでextendWallを実行した場合のテスト
-      // isExtendingSuccess = this.extendWall_ng_falseClearDirectionAndFalseIsConnectedWall();
-
       // 選んだセルが既存の壁ではないならextedWallを実行する
-      if (this.grid[startRow][startColumn] !== this.cellType.Wall) {
+      // 壁でない場合、必然通路になるはず
+      if (this.grid[startRow][startColumn] === this.cellType.ExtendingStart) {
         this.grid[startRow][startColumn] = this.cellType.Extending;
         isExtendingSuccess = this.extendWall(startRow, startColumn);
-      }
 
-      if (isExtendingSuccess) {
-        this.startCellList.splice(rand, 1);
-      } else if (this.grid[startRow][startColumn] === this.cellType.Wall) {
-        console.log(`Not execute extendWall at ${startRow},${startColumn}`);
-        this.startCellList.splice(rand, 1);
+        // 壁拡張が失敗するパターンでextendWallを実行した場合のテスト
+        // isExtendingSuccess = this.extendWall_ng_falseClearDirectionAndFalseIsConnectedWall();
+
+        if (isExtendingSuccess) {
+          this.removeStartCellList(rand);
+        } else {
+          console.log('拡張中の壁を破棄し、再度壁を拡張します');
+          this.updateExtending(this.cellType.Path);
+          // return; // テストを実行する時はreturnを記述してwhileループを抜ける
+        }
       } else {
-        console.log('拡張中の壁を破棄し、再度壁を拡張します');
-        this.updateExtending(this.cellType.Path);
-        // return; // テストを実行する時はreturnを記述してwhileループを抜ける
+        this.removeStartCellList(rand);
       }
     }
   }
