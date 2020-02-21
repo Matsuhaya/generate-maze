@@ -1,4 +1,4 @@
-# [迷路作成プログラム](http://grayhorse5.sakura.ne.jp/make-maze/)
+# [迷路作成プログラム](http://grayhorse5.sakura.ne.jp/generate-maze/)
 
 ## Description
 

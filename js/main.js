@@ -1,5 +1,5 @@
-import Maze from './Maze.js';
-import Explorer from './Explorer.js';
+import { Maze } from './Maze.js';
+// import Explorer from './Explorer.js';
 
 // 正解ルートの表示切り替え
 $('.answer').click(e => {

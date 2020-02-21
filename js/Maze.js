@@ -1,4 +1,4 @@
-export default class Maze {
+export class Maze {
   constructor(WIDTH, HEIGHT) {
     this.WIDTH = WIDTH;
     this.HEIGHT = HEIGHT;
