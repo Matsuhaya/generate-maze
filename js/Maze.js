@@ -11,7 +11,7 @@ export class Maze {
       Goal: 'G',
       Path: 0,
       Wall: 1,
-      Extending: 2,
+      ExtendingWall: 2,
       ExtendingStart: 3 // startCellList内に含まれており、かつPathである状態
     };
     this.extendingCounter = 0; // 迷路の壁を拡張するたびにカウンターが増加する
@@ -76,7 +76,7 @@ export class Maze {
       // 選んだセルが既存の壁ではないならextedWallを実行する
       // 壁でない場合、必然通路になるはず
       if (this.grid[startRow][startColumn] === this.cellType.ExtendingStart) {
-        this.grid[startRow][startColumn] = this.cellType.Extending;
+        this.grid[startRow][startColumn] = this.cellType.ExtendingWall;
         isExtendingSuccess = this.extendWall(startRow, startColumn);
 
         // 壁拡張が失敗するパターンでextendWallを実行した場合のテスト
@@ -86,7 +86,7 @@ export class Maze {
           this.removeStartCellList(rand);
         } else {
           console.log('拡張中の壁を破棄し、再度壁を拡張します');
-          this.updateExtending(this.cellType.Path);
+          this.updateExtendingWall(this.cellType.Path);
           // return; // テストを実行する時はreturnを記述してwhileループを抜ける
         }
       } else {
@@ -95,14 +95,14 @@ export class Maze {
     }
   }
 
-  // extendWallを実行中、拡張中の壁だけがExtendingとなるようにする。
+  // extendWallを実行中、拡張中の壁だけがExtendingWallとなるようにする。
   // 迷路の情報を更新して、PathとWallのみにする。
-  // 壁に更新する場合、ExtendingはWallに変更
-  // 更新をリセットする場合、ExtendingはPathとExtendingStartに変更
-  updateExtending(nextCellType) {
+  // 壁に更新する場合、ExtendingWallはWallに変更
+  // 更新をリセットする場合、ExtendingWallはPathとExtendingStartに変更
+  updateExtendingWall(nextCellType) {
     for (let row = 0; row < this.HEIGHT; row++) {
       for (let column = 0; column < this.WIDTH; column++) {
-        if (this.grid[row][column] === this.cellType.Extending) {
+        if (this.grid[row][column] === this.cellType.ExtendingWall) {
           this.grid[row][column] = nextCellType;
 
           if (
@@ -119,7 +119,7 @@ export class Maze {
 
   // 壁伸ばし処理
   // 再帰処理
-  // 今いるgridの場所をExtendingに変更
+  // 今いるgridの場所をExtendingWallに変更
   // ランダムで選択した壁を伸ばせる方向に2進む
   // 行き先が壁かどうかを判定
   extendWall(row, column) {
@@ -130,7 +130,7 @@ export class Maze {
     if (clearDirection.length) {
       let rand = Math.floor(Math.random() * clearDirection.length);
       // row, column, isConnectedWallを更新
-      ({ row, column, isConnectedWall } = this.updateExtendingOnDirection(
+      ({ row, column, isConnectedWall } = this.updateExtendingWallOnDirection(
         row,
         column,
         clearDirection[rand],
@@ -142,7 +142,7 @@ export class Maze {
       if (!isConnectedWall) {
         this.extendWall(row, column);
       } else {
-        this.updateExtending(this.cellType.Wall);
+        this.updateExtendingWall(this.cellType.Wall);
         // 更新後に描画する方が、更新プロセスがわかりやすい
         this.drowMyself();
         return true;
@@ -160,19 +160,19 @@ export class Maze {
   checkDirection(row, column, DISTANCE) {
     const directions = [];
     // 上方向
-    if (this.grid[row - DISTANCE][column] !== this.cellType.Extending) {
+    if (this.grid[row - DISTANCE][column] !== this.cellType.ExtendingWall) {
       directions.push('UP');
     }
     // 下方向
-    if (this.grid[row + DISTANCE][column] !== this.cellType.Extending) {
+    if (this.grid[row + DISTANCE][column] !== this.cellType.ExtendingWall) {
       directions.push('DOWN');
     }
     // 左方向
-    if (this.grid[row][column - DISTANCE] !== this.cellType.Extending) {
+    if (this.grid[row][column - DISTANCE] !== this.cellType.ExtendingWall) {
       directions.push('LEFT');
     }
     // 右方向
-    if (this.grid[row][column + DISTANCE] !== this.cellType.Extending) {
+    if (this.grid[row][column + DISTANCE] !== this.cellType.ExtendingWall) {
       directions.push('RIGHT');
     }
     return directions;
@@ -182,35 +182,36 @@ export class Maze {
   // 1.拡張先が既存の壁の場合、フラグを立てる
   // 2.引数の方向に壁を拡張する
   // 3.実行後は、フラグの結果を返す
-  updateExtendingOnDirection(row, column, direction, DISTANCE) {
+  updateExtendingWallOnDirection(row, column, direction, DISTANCE) {
     let isConnectedWall;
+
     switch (direction) {
       case 'UP':
         isConnectedWall =
           this.grid[row - DISTANCE][column] === this.cellType.Wall;
         for (let i = 0; i < DISTANCE; i++) {
-          this.grid[--row][column] = this.cellType.Extending;
+          this.grid[--row][column] = this.cellType.ExtendingWall;
         }
         break;
       case 'DOWN':
         isConnectedWall =
           this.grid[row + DISTANCE][column] === this.cellType.Wall;
         for (let i = 0; i < DISTANCE; i++) {
-          this.grid[++row][column] = this.cellType.Extending;
+          this.grid[++row][column] = this.cellType.ExtendingWall;
         }
         break;
       case 'LEFT':
         isConnectedWall =
           this.grid[row][column - DISTANCE] === this.cellType.Wall;
         for (let i = 0; i < DISTANCE; i++) {
-          this.grid[row][--column] = this.cellType.Extending;
+          this.grid[row][--column] = this.cellType.ExtendingWall;
         }
         break;
       case 'RIGHT':
         isConnectedWall =
           this.grid[row][column + DISTANCE] === this.cellType.Wall;
         for (let i = 0; i < DISTANCE; i++) {
-          this.grid[row][++column] = this.cellType.Extending;
+          this.grid[row][++column] = this.cellType.ExtendingWall;
         }
         break;
     }
@@ -285,7 +286,7 @@ export class Maze {
       for (let column = 0; column < this.WIDTH; column++) {
         if (this.grid[row][column] === this.cellType.Wall) {
           tr.append($('<td class="maze-cell -wall"></td>'));
-        } else if (this.grid[row][column] === this.cellType.Extending) {
+        } else if (this.grid[row][column] === this.cellType.ExtendingWall) {
           tr.append($('<td class="maze-cell -extending"></td>'));
         } else if (this.grid[row][column] === this.cellType.ExtendingStart) {
           tr.append($('<td class="maze-cell -extending-start"></td>'));
@@ -321,10 +322,10 @@ export class Maze {
       'LEFT',
       'DOWN'
     ];
-    this.grid[row][column] = this.cellType.Extending;
+    this.grid[row][column] = this.cellType.ExtendingWall;
 
     for (let i = 0; i < directions.length; i++) {
-      ({ row, column, isConnectedWall } = this.updateExtendingOnDirection(
+      ({ row, column, isConnectedWall } = this.updateExtendingWallOnDirection(
         row,
         column,
         directions[i],
