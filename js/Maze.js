@@ -58,6 +58,17 @@ export class Maze {
     this.startCellList.splice(index, 1);
   }
 
+  getStartCell() {
+    let nextRandIndex = Math.floor(Math.random() * this.startCellList.length);
+    let nextStartRow = this.startCellList[nextRandIndex][0];
+    let nextStartColumn = this.startCellList[nextRandIndex][1];
+    return {
+      randIndex: nextRandIndex,
+      startRow: nextStartRow,
+      startColumn: nextStartColumn
+    };
+  }
+
   // 1. row, column がともに偶数となるセルを、壁伸ばし開始地点(候補)としてリストに追加
   // 2. ランダムでリストからセルを選び、壁かどうかを確認
   //     *  壁でない場合、3の処理へ
@@ -77,9 +88,7 @@ export class Maze {
 
     while (this.startCellList.length) {
       // ランダムでリストからセルを取り出す
-      let rand = Math.floor(Math.random() * this.startCellList.length);
-      let startRow = this.startCellList[rand][0];
-      let startColumn = this.startCellList[rand][1];
+      let { randIndex, startRow, startColumn } = this.getStartCell();
       let isExtendingSuccess = false;
 
       // 選んだセルが既存の壁ではないならextedWallを実行する
@@ -95,14 +104,14 @@ export class Maze {
           this.updateExtendingWall(this.cellType.Wall);
           // 更新後に描画する方が、更新プロセスがわかりやすい
           this.drowMyself();
-          this.removeStartCellList(rand);
+          this.removeStartCellList(randIndex);
         } else {
           console.log('拡張中の壁を破棄し、再度壁を拡張します');
           this.updateExtendingWall(this.cellType.Path);
           // return; // テストを実行する時はreturnを記述してwhileループを抜ける
         }
       } else {
-        this.removeStartCellList(rand);
+        this.removeStartCellList(randIndex);
       }
     }
   }
