@@ -155,12 +155,12 @@ export class Maze {
     let clearDirectionList = this.addClearDirectionList(row, column, DISTANCE);
 
     if (clearDirectionList.length) {
-      let rand = Math.floor(Math.random() * clearDirectionList.length);
+      let randIndex = Math.floor(Math.random() * clearDirectionList.length);
       // row, column, isConnectedWallを更新
       ({ row, column, isConnectedWall } = this.updateExtendingWallOnDirection(
         row,
         column,
-        clearDirectionList[rand],
+        clearDirectionList[randIndex],
         DISTANCE
       ));
       this.drowMyself();
