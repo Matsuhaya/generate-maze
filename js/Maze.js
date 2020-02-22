@@ -92,6 +92,9 @@ export class Maze {
         // isExtendingSuccess = this.extendWall_ng_falseClearDirectionListAndFalseIsConnectedWall();
 
         if (isExtendingSuccess) {
+          this.updateExtendingWall(this.cellType.Wall);
+          // 更新後に描画する方が、更新プロセスがわかりやすい
+          this.drowMyself();
           this.removeStartCellList(rand);
         } else {
           console.log('拡張中の壁を破棄し、再度壁を拡張します');
@@ -155,12 +158,9 @@ export class Maze {
 
       // もしまだ既存の壁と接続していなければ、壁伸ばし続行！
       if (!isConnectedWall) {
-        this.extendWall(row, column);
+        return this.extendWall(row, column);
       } else {
         console.log('壁伸ばし成功');
-        this.updateExtendingWall(this.cellType.Wall);
-        // 更新後に描画する方が、更新プロセスがわかりやすい
-        this.drowMyself();
         return true;
       }
     } else {
