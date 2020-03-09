@@ -1,5 +1,5 @@
-import Maze from './Maze.js';
-import Explorer from './Explorer.js';
+import { Maze } from './Maze.js';
+// import Explorer from './Explorer.js';
 
 // 正解ルートの表示切り替え
 $('.answer').click(e => {
@@ -12,10 +12,8 @@ $('.answer').click(e => {
 const WIDTH = 9;
 const HEIGHT = 9;
 const maze = new Maze(WIDTH, HEIGHT);
-maze.makeGrid();
-maze.countStartCellList();
-maze.drowMyself();
-maze.createMaze();
+maze.generateGrid();
+maze.generateMaze();
 maze.setUpperLeftStart();
 maze.setUnderRightGoal();
 maze.drowMyself();
