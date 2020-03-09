@@ -24,7 +24,7 @@
 
 .contoroller .answer.active {
   background: rgba(0, 255, 0, 1);
-}
+}*/
 
 .description {
   margin: 16px auto;
@@ -58,6 +58,7 @@
   color: #a757a8;
 }
 
+/* 
 .color-green {
   color: #0f0;
 } */
@@ -78,7 +79,7 @@
   background-color: #000;
 }
 
-.maze-cell.-extending {
+.maze-cell.-extending-wall {
   background-color: #808080;
 }
 
@@ -104,6 +105,6 @@
 
 .maze-wrapper {
   margin: 20px auto 0;
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }

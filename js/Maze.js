@@ -314,7 +314,7 @@ export class Maze {
         if (this.grid[row][column] === this.cellType.Wall) {
           tr.append($('<td class="maze-cell -wall"></td>'));
         } else if (this.grid[row][column] === this.cellType.ExtendingWall) {
-          tr.append($('<td class="maze-cell -extending"></td>'));
+          tr.append($('<td class="maze-cell -extending-wall"></td>'));
         } else if (this.grid[row][column] === this.cellType.ExtendingStart) {
           tr.append($('<td class="maze-cell -extending-start"></td>'));
         } else if (this.grid[row][column] === 'S') {
