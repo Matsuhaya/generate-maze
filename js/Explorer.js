@@ -1,23 +1,31 @@
 export default class Explorer {
   // mazeの情報からexplorerを生成する
-  constructor(maze) {
-    this.WIDTH = maze.WIDTH;
-    this.HEIGHT = maze.HEIGHT;
-    this.grid = maze.grid; // cellTypeを格納した二次元配列
-    this.start = maze.start; // スタート地点の[row, column]
-    this.goal = maze.goal; // ゴール地点
+  // ObjectはDeepCopyする
+  constructor(WIDTH, HEIGHT) {
+    this.WIDTH = WIDTH;
+    this.HEIGHT = HEIGHT;
+    this.grid = []; // cellTypeを格納した二次元配列
+    this.start = []; // スタート地点の[row, column]
+    this.goal = []; // ゴール地点
     this.cellType = {
       Start: 'S',
       Goal: 'G',
       Path: 0,
       Wall: 1,
-      AnswerRoute: 3,
+      AnswerRoute: 'A',
       FromUp: 'U',
       FromRight: 'R',
       FromDown: 'D',
       FromLeft: 'L'
     };
     this.beforeGoal = []; // ゴール手前の[row, column]
+  }
+
+  deepCopyMaze(grid, start, goal) {
+    // 二重配列のDeepCopy
+    this.grid = JSON.parse(JSON.stringify(grid));
+    $.extend(this.start, start);
+    $.extend(this.goal, goal);
   }
 
   // 探索キューからセルを取り出す

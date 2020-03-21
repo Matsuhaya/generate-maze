@@ -102,8 +102,10 @@ export class Maze {
 
         if (isExtendingSuccess) {
           this.updateExtendingWall(this.cellType.Wall);
+
           // 更新後に描画する方が、更新プロセスがわかりやすい
-          this.drowMyself();
+          // this.drowMyself();
+
           this.removeStartCellList(randIndex);
         } else {
           console.log('拡張中の壁を元にもどし、再度壁を拡張します');
@@ -163,7 +165,9 @@ export class Maze {
         clearDirectionList[randIndex],
         DISTANCE
       ));
-      this.drowMyself();
+
+      // stepごとの迷路の状態を表示する
+      // this.drowMyself();
 
       // もしまだ既存の壁と接続していなければ、壁伸ばし続行！
       if (!isConnectedWall) {
