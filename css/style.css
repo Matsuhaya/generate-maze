@@ -89,7 +89,7 @@
   background-color: #fff;
 }
 
-.maze-cell.-answer-route.show {
+.maze-cell.-answer.show {
   background-color: #0f0;
 }
 

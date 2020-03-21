@@ -12,7 +12,8 @@ export class Maze {
       Path: 0,
       Wall: 1,
       ExtendingWall: 2,
-      ExtendingStart: 3 // startCellList内に含まれており、かつPathである状態
+      ExtendingStart: 3, // startCellList内に含まれており、かつPathである状態
+      AnswerRoute: 'A'
     };
     this.extendingCounter = 0; // 迷路の壁を拡張するたびにカウンターが増加する
   }
@@ -307,9 +308,7 @@ export class Maze {
     ++this.extendingCounter;
     let className = `maze step${this.extendingCounter}`;
     $('.maze-wrapper').append(
-      $(`<table class="${className}"><caption>${className}</caption>`).append(
-        $('<tbody>')
-      )
+      $(`<table class="${className}">`).append($('<tbody>'))
     );
 
     for (let row = 0; row < this.HEIGHT; row++) {
@@ -321,10 +320,12 @@ export class Maze {
           tr.append($('<td class="maze-cell -extending-wall"></td>'));
         } else if (this.grid[row][column] === this.cellType.ExtendingStart) {
           tr.append($('<td class="maze-cell -extending-start"></td>'));
-        } else if (this.grid[row][column] === 'S') {
+        } else if (this.grid[row][column] === this.cellType.Start) {
           tr.append($('<td class="maze-cell -start"></td>'));
-        } else if (this.grid[row][column] === 'G') {
+        } else if (this.grid[row][column] === this.cellType.Goal) {
           tr.append($('<td class="maze-cell -goal"></td>'));
+        } else if (this.grid[row][column] === this.cellType.AnswerRoute) {
+          tr.append($('<td class="maze-cell -answer"></td>'));
         } else {
           tr.append($('<td class="maze-cell -path"></td>'));
         }
@@ -376,5 +377,10 @@ export class Maze {
     }
 
     return result;
+  }
+
+  // Explorerで探索した正解ルートの情報を更新
+  updateMazeAnserRoute(grid) {
+    this.grid = JSON.parse(JSON.stringify(grid));
   }
 }

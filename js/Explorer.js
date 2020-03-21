@@ -6,7 +6,7 @@ export default class Explorer {
     this.HEIGHT = HEIGHT;
     this.grid = []; // cellTypeを格納した二次元配列
     this.start = []; // スタート地点の[row, column]
-    this.goal = []; // ゴール地点
+    this.beforeGoal = []; // ゴール手前の[row, column]
     this.cellType = {
       Start: 'S',
       Goal: 'G',
@@ -18,14 +18,12 @@ export default class Explorer {
       FromDown: 'D',
       FromLeft: 'L'
     };
-    this.beforeGoal = []; // ゴール手前の[row, column]
   }
 
-  deepCopyMaze(grid, start, goal) {
-    // 二重配列のDeepCopy
+  deepCopyMaze(grid, start) {
+    // 二次元配列のDeepCopy
     this.grid = JSON.parse(JSON.stringify(grid));
     $.extend(this.start, start);
-    $.extend(this.goal, goal);
   }
 
   // 探索キューからセルを取り出す
