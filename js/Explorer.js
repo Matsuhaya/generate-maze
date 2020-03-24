@@ -31,13 +31,10 @@ export default class Explorer {
   // セルの探索は上から時計回り方向
   // セルがゴール地点であることを確認したら、その時点で探索終了
   searchGoal(passedCellList) {
-    // console.count('Go');
     let nextPassedCellList = [];
 
     while (passedCellList.length) {
-      let row = passedCellList[0][0];
-      let column = passedCellList[0][1];
-      passedCellList.shift();
+      let [row, column] = passedCellList.shift();
 
       if (this.grid[row][column] === this.cellType.Goal) {
         return;
