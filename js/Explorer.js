@@ -36,16 +36,16 @@ export default class Explorer {
   //     * 空ではない場合、2の処理へ
   //     * 空の場合、処理を終了
   breadthFirstSearch(start) {
-    let passedCellList = [start];
+    let searchQueue = [start];
 
-    while (passedCellList.length) {
-      let [row, column] = passedCellList.shift();
+    while (searchQueue.length) {
+      let [row, column] = searchQueue.shift();
 
       if (this.grid[row][column] === this.cellType.Goal) {
         return;
       }
 
-      passedCellList.push(...this.checkNextCell(row, column));
+      searchQueue.push(...this.checkNextCell(row, column));
     }
   }
 
@@ -54,15 +54,15 @@ export default class Explorer {
   //     * ゴールの場合、5の処理へ
   //     * どちらでもない場合、4の処理へ
   // 2. 探索済の印(どの方向から来たのかを示す)をつける
-  // 3. 対象の隣接セルを通路リストに追加
+  // 3. 対象の隣接セルを探索済リストに追加
   // 4. 4方向全て探索完了したか
   //     * 未完了の場合、1の処理へ
   //     * 完了した場合、7の処理へ
   // 5. 現在地をゴール手前のセルとして更新
-  // 6. 対象の隣接セルを通路リストに追加
-  // 7. 通路リストをリターン
+  // 6. 対象の隣接セルを探索済リストに追加
+  // 7. 探索済リストをリターン
   checkNextCell(row, column) {
-    const nextPassedCellList = [];
+    const nextSearchQueue = [];
     const DISTANCE = 1; // 探索距離
 
     for (let i = 0; i < 4; i++) {
@@ -93,15 +93,15 @@ export default class Explorer {
 
       if (this.grid[nextRow][nextColumn] === this.cellType.Path) {
         this.grid[nextRow][nextColumn] = nextcellType;
-        nextPassedCellList.push([nextRow, nextColumn]);
+        nextSearchQueue.push([nextRow, nextColumn]);
       } else if (this.grid[nextRow][nextColumn] === this.cellType.Goal) {
         this.beforeGoal = [row, column];
-        nextPassedCellList.push([nextRow, nextColumn]);
-        return nextPassedCellList;
+        nextSearchQueue.push([nextRow, nextColumn]);
+        return nextSearchQueue;
       }
     }
 
-    return nextPassedCellList;
+    return nextSearchQueue;
   }
 
   // ゴールからスタートの道を辿り、AnswerRouteに更新
