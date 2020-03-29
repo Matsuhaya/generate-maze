@@ -21,8 +21,7 @@ console.log('maze:', maze);
 const explorer = new Explorer(maze.WIDTH, maze.HEIGHT);
 explorer.deepCopyMaze(maze.grid, maze.start);
 console.log('explorer:', explorer);
-
-explorer.searchGoal([explorer.start]); //スタート地点のセルを二次元配列探索キューに追加
+explorer.breadthFirstSearch(explorer.start); //スタート地点のセルを二次元配列探索キューに追加
 explorer.updateAnswerRoute(explorer.beforeGoal[0], explorer.beforeGoal[1]);
 
 maze.updateMazeAnserRoute(explorer.grid);
