@@ -26,10 +26,16 @@ export default class Explorer {
     $.extend(this.start, start);
   }
 
-  // 探索キューからセルを取り出す
-  // 取り出したセルに隣接するセルの内、未探索のセルをキューに追加
-  // セルの探索は上から時計回り方向
-  // セルがゴール地点であることを確認したら、その時点で探索終了
+  // 1. 次の探索キューを新たに用意
+  // 2. 現在の探索キューからセルを取り出す
+  // 3. 取り出したセルのゴール判定
+  //     * ゴールの場合、処理を終了
+  // 4. 幅優先探索の実行
+  // 5. 通路を次の探索キューに追加
+  // 6. 現在の探索キューが空かどうかを確認
+  //     * 空ではない場合、2の処理へ
+  //     * 空の場合、7の処理へ
+  // 7. 次の探索キューを現在の探索キューに更新して1の処理へ
   searchGoal(passedCellList) {
     let nextPassedCellList = [];
 
@@ -40,18 +46,25 @@ export default class Explorer {
         return;
       }
 
-      nextPassedCellList.push(...this.checkDirection(row, column));
+      nextPassedCellList.push(...this.breadthFirstSearch(row, column));
     }
 
     this.searchGoal(nextPassedCellList);
   }
 
-  // 上下左右の4方向を探索
-  // 探索エリアは現在地から1マス先
-  // 探索先が通路の場合、どの方向から来たのかを1マス先に記録
-  // 探索先がゴールの場合、現在地をbeforeGoalに、探索先をnextPassedCellListにそれぞれ追加してその時点で処理を終える
-  // 探索可能方向を格納した配列を返す
-  checkDirection(row, column) {
+  // 1. 現在のセルから、探索する1マス先が通路もしくはゴールかどうか確認
+  //     * 通路の場合、2の処理へ
+  //     * ゴールの場合、5の処理へ
+  //     * どちらでもない場合、4の処理へ
+  // 2. どの方向から来たのかを1マス先に記録
+  // 3. 1マス先を通路リストに追加
+  // 4. 4方向全て探索完了したか
+  //     * 未完了の場合、1の処理へ
+  //     * 完了した場合、7の処理へ
+  // 5. 現在のセルをゴール手前のセルとして更新
+  // 6. 1マス先を通路リストに追加
+  // 7. 通路リストをリターン
+  breadthFirstSearch(row, column) {
     const nextPassedCellList = [];
     const DISTANCE = 1; // 探索距離
 
