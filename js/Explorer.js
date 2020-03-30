@@ -104,10 +104,10 @@ export default class Explorer {
     return nextSearchQueue;
   }
 
-  // ゴールからスタートの道を辿り、AnswerRouteに更新
   updateAnswerRoute() {
     let [row, column] = this.beforeGoal;
 
+    // ゴールからスタートの道を辿り、AnswerRouteに更新
     while (this.grid[row][column] !== this.cellType.Start) {
       switch (this.grid[row][column]) {
         case this.cellType.FromUp:
@@ -126,6 +126,20 @@ export default class Explorer {
           this.grid[row][column] = this.cellType.AnswerRoute;
           --column;
           break;
+      }
+    }
+
+    // AnswerRoute以外の探索済の印は、全てPathに更新
+    for (let row = 0; row < this.HEIGHT; row++) {
+      for (let column = 0; column < this.WIDTH; column++) {
+        if (
+          this.grid[row][column] === this.cellType.FromUp ||
+          this.grid[row][column] === this.cellType.FromDown ||
+          this.grid[row][column] === this.cellType.FromLeft ||
+          this.grid[row][column] === this.cellType.FromRight
+        ) {
+          this.grid[row][column] = this.cellType.Path;
+        }
       }
     }
   }
