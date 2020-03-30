@@ -35,8 +35,8 @@ export default class Explorer {
   // 6. 探索キューが空かどうかを確認
   //     * 空ではない場合、2の処理へ
   //     * 空の場合、処理を終了
-  breadthFirstSearch(start) {
-    let searchQueue = [start];
+  breadthFirstSearch() {
+    let searchQueue = [this.start];
 
     while (searchQueue.length) {
       let [row, column] = searchQueue.shift();
@@ -105,9 +105,10 @@ export default class Explorer {
   }
 
   // ゴールからスタートの道を辿り、AnswerRouteに更新
-  updateAnswerRoute(row, column) {
-    // console.count('Back');
-    if (this.grid[row][column] !== this.cellType.Start) {
+  updateAnswerRoute() {
+    let [row, column] = this.beforeGoal;
+
+    while (this.grid[row][column] !== this.cellType.Start) {
       switch (this.grid[row][column]) {
         case this.cellType.FromUp:
           this.grid[row][column] = this.cellType.AnswerRoute;
@@ -126,9 +127,6 @@ export default class Explorer {
           --column;
           break;
       }
-    } else {
-      return;
     }
-    this.updateAnswerRoute(row, column);
   }
 }
