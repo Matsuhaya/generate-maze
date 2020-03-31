@@ -9,8 +9,8 @@ $('.answer').click(e => {
 });
 
 //サイズは必ず5以上の奇数で生成する
-const WIDTH = 9;
-const HEIGHT = 9;
+const WIDTH = 49;
+const HEIGHT = 49;
 const maze = new Maze(WIDTH, HEIGHT);
 maze.generateGrid();
 maze.generateMaze();
@@ -23,6 +23,7 @@ explorer.deepCopyMaze(maze.grid, maze.start);
 console.log('explorer:', explorer);
 explorer.breadthFirstSearch();
 explorer.updateAnswerRoute();
+console.log('explorer.grid:', JSON.parse(JSON.stringify(explorer.grid)));
 
 maze.updateMazeAnserRoute(explorer.grid);
 maze.drowMyself();

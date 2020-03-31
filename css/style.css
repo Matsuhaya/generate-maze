@@ -67,10 +67,10 @@
 }
 
 .maze-cell {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   padding: 0;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
 }
 
 .maze-cell.-wall {

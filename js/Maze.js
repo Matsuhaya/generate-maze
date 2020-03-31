@@ -174,11 +174,11 @@ export class Maze {
       if (!isConnectedWall) {
         return this.extendWall(row, column);
       } else {
-        console.log('壁伸ばし成功');
+        // console.log('壁伸ばし成功');
         return true;
       }
     } else {
-      console.log('壁伸ばし失敗');
+      // console.log('壁伸ばし失敗');
       return false;
     }
   }
