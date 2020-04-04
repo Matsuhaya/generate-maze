@@ -1,4 +1,4 @@
-# [迷路作成プログラム](http://grayhorse5.sakura.ne.jp/generate-maze/)
+# [迷路作成プログラム](https://generate-maze.netlify.com/)
 
 ## Description
 
@@ -16,5 +16,3 @@
 - [幅優先探索 - Algoful](https://algoful.com/Archive/Algorithm/BFS)
 - [ネタがないので迷路を自動生成してみた | 東京工業大学デジタル創作同好会 traP](https://trap.jp/post/472/)
 - [幅優先探索 - Wikipedia](https://ja.wikipedia.org/wiki/%E5%B9%85%E5%84%AA%E5%85%88%E6%8E%A2%E7%B4%A2)
-
-
